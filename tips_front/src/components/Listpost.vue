@@ -1,5 +1,7 @@
 <template>
 <div class="hello">
+    <button v-on:click="getPosts">Get whole post</button>
+
     <b-card header="오늘 해야 할 일" style="max-width: 40rem; margin: auto; margin-top: 10vh;" class="mb-2" border-variant="info" align="left">
 
         <b-form-group id="to-do-input">
@@ -14,7 +16,6 @@
                 </b-row>
             </b-container>
         </b-form-group>
-
         <b-list-group v-if="toDoItems && toDoItems.length">
             <b-list-group-item v-for="toDoItem of toDoItems" v-bind:data="toDoItem.title" v-bind:key="toDoItem.id">
                 <b-form-checkbox v-model="toDoItem.done">
@@ -30,23 +31,29 @@
 import axios from 'axios'
 
 export default {
-    name: 'hello',
+    name: 'Listpost',
     data: () => {
         return {
-            toDoItems: []
+            toDoItems: [],
+            requesturl: 'http://127.0.0.1:8000/api/'
         }
     },
-    created() {
-        axios.get('http://127.0.0.1:5000/todo/')
-            .then(response => {
-                this.toDoItems = response.data.map(r => r.data)
 
-            })
-            .catch(e => {
-                console.log('error : ', e)
-            })
+    methods: {
+        getPosts() {
+            var config = {
+                headers: {
+
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }
+            axios.get(this.requesturl + 'post/posts/', config).then(
+                (res) => {
+                    console.log(res)
+                    this.toDoItems = res.data
+                }
+            ).catch(err => console.log(err))
+        }
     }
 }
 </script>
-
-출처: https://imasoftwareengineer.tistory.com/42 [삐멜 소프트웨어 엔지니어]
