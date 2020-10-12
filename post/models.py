@@ -9,6 +9,8 @@ class Post(models.Model):
     content = models.CharField(max_length=400)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
 
+
+    #how call?
     def rating_average(self):
         sum=0
         ratings = Rating.objects.filter(post=self)

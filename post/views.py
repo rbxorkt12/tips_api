@@ -14,6 +14,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (AllowAny,)
 
+    #call by using http://127.0.0.1:8000/api/post/posts/1/rate_post/
     @action(methods=['POST'], detail=True)
     def rate_post(self, request, pk=None):
         if 'stars' in request.data:
@@ -43,7 +44,7 @@ class RatingViewset(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def delete(self, request, *args, **kwargs):
         response = {'message': "is not allowed"}
