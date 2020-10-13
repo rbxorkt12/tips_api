@@ -5,7 +5,7 @@ from .models import Post,Rating
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ('comment_list','title','content','author','rating_average',)
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:

@@ -20,6 +20,15 @@ class Post(models.Model):
             return sum/len(ratings)
         return 0
 
+
+    def comment_list(self):
+        comment_list = []
+        ratings = Rating.objects.filter(post=self)
+        for rating in ratings:
+            comment_list.append(rating.comments)
+        return comment_list
+
+        
 class Rating(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

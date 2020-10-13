@@ -1,6 +1,5 @@
 <template>
 <div id="app">
-    <title key="helloworld"></title>
     <img alt="Vue logo" src="./assets/logo.png">
     <Listpost msg="Welcome to Your Vue.js App" />
 </div>

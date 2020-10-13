@@ -2,7 +2,7 @@
 <div class="hello">
     <button v-on:click="getPosts">Get whole post</button>
 
-    <b-card header="오늘 해야 할 일" style="max-width: 40rem; margin: auto; margin-top: 10vh;" class="mb-2" border-variant="info" align="left">
+    <b-card header="Whole post in such Domain" style="max-width: 40rem; margin: auto; margin-top: 10vh;" class="mb-2" border-variant="info" align="left">
 
         <b-form-group id="to-do-input">
             <b-container fluid>
@@ -16,44 +16,49 @@
                 </b-row>
             </b-container>
         </b-form-group>
-        <b-list-group v-if="toDoItems && toDoItems.length">
-            <b-list-group-item v-for="toDoItem of toDoItems" v-bind:data="toDoItem.title" v-bind:key="toDoItem.id">
-                <b-form-checkbox v-model="toDoItem.done">
-                    {{toDoItem.title}}
+        <b-list-group v-if="posts && posts.length">
+            <b-list-group-item v-for="post of posts" v-bind:data="post.title" v-bind:key="post.id">
+                <b-form-checkbox v-model="post.done">
+                    {{post.title}}
                 </b-form-checkbox>
+                <div class="card-text"> {{post.rating_average}}</div>
+                <button class="btn-sm btn-primary mt-2 mb-3" @click="postDetail(post)">Detail</button>
             </b-list-group-item>
         </b-list-group>
     </b-card>
+    <Detailpost v-bind:targetpost="targetpost"></Detailpost>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
-
+import Detailpost from './Detailpost'
 export default {
+    components: {
+        Detailpost
+    },
     name: 'Listpost',
     data: () => {
         return {
-            toDoItems: [],
+            posts: [],
+            targetpost: Object,
             requesturl: 'http://127.0.0.1:8000/api/'
         }
     },
 
     methods: {
         getPosts() {
-            var config = {
-                headers: {
-
-                    'Access-Control-Allow-Origin': '*'
-                }
-            }
-            axios.get(this.requesturl + 'post/posts/', config).then(
+            axios.get(this.requesturl + 'post/posts/').then(
                 (res) => {
-                    console.log(res)
-                    this.toDoItems = res.data
+                    this.posts = res.data
                 }
             ).catch(err => console.log(err))
+        },
+        postDetail(post) {
+            this.targetpost = post;
+            console.log(this.targetpost)
         }
+
     }
 }
 </script>
