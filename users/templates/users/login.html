@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<h1>Login page</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    ID <input name="username" type="text">
+    <br>
+    PassWord <input name="password" type="password">
+    <br>
+    <input type="submit" value="로그인">
+</form>
+
+{% if user.is_authenticated %}
+Login OK
+
+{% else %}
+Login Fail
+{% endif %}
+
+</body>
+</html>
