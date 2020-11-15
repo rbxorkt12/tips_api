@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Post(models.Model):
+    objects = models.Manager()
     title = models.CharField(max_length=80)
     content = models.CharField(max_length=400)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-
 
     #how call?
     def rating_average(self):
@@ -20,7 +20,6 @@ class Post(models.Model):
             return sum/len(ratings)
         return 0
 
-
     def comment_list(self):
         comment_list = []
         ratings = Rating.objects.filter(post=self)
@@ -30,6 +29,7 @@ class Post(models.Model):
 
         
 class Rating(models.Model):
+    objects = models.Manager()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stars = models.IntegerField()

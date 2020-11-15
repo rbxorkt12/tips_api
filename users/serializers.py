@@ -10,6 +10,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "password")
         extra_kwargs = {"password": {"write_only": True}}
 
+
+    #serializer.save()랑 match됨.
     def create(self, validated_data):
         user = User.objects.create_user(
             validated_data["username"], None, validated_data["password"]
@@ -29,6 +31,7 @@ class LoginUserSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+    #serializer.is_valid()와 매칭됨.
     def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
