@@ -11,13 +11,14 @@ class Profile(models.Model):
     user_pk = models.IntegerField(blank=True)
     email = models.EmailField(max_length=500, blank=True)
     nickname = models.CharField(max_length=200, blank=True)
-    point = models.IntegerField(default=0)
+    credit = models.IntegerField(default=0)
     phone = models.CharField(max_length=200, blank=True)
     KIND_LIST = (
         ('U','Undergraduate'),
         ('G','Graduated')
     )
-    user_kind = models.CharField(max_length=1, choices=KIND_LIST)
+    user_kind1 = models.CharField(max_length=1, choices=KIND_LIST)
+    user_kind2 = models.CharField(max_length=20, blank=True)
 
 
 @receiver(post_save, sender=User)
