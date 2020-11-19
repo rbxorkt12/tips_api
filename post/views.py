@@ -1,15 +1,13 @@
 from rest_framework import viewsets, status
-from .serializers import PostSerializer, RatingSerializer
-from .models import Post, Rating
+from .serializers import PostSerializer, RatingSerializer, BuyingSerializer
+from .models import Post, Rating, Buying
+from users.models import Profile
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny,IsAuthenticated,IsAuthenticatedOrReadOnly
 from django.shortcuts import get_list_or_404
-from .permission import IsOwnerOrReadOnly
+from .permission import IsOwnerOrReadOnly,NodeletePermission
 from knox.auth import TokenAuthentication
-
-# Create your views here.
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -22,6 +20,17 @@ class PostViewSet(viewsets.ModelViewSet):
         if str(request.user) == 'AnonymousUser':
             return Response({'message: You have to login first'},status=status.HTTP_401_UNAUTHORIZED)
         queryset = Post.objects.filter(author=request.user)
+        serilaizer = PostSerializer(queryset,many=True)
+        return Response(serilaizer.data)
+
+
+    @action(methods=['GET'], detail=True)
+    def kind(self,request,pk=None):
+        if pk is None :
+            return Response({'meesage : Input proper kind option U or G'},status=status.HTTP_400_BAD_REQUEST})
+        if str(request.user) == 'AnonymousUser':
+            return Response({'message: You have to login first'},status=status.HTTP_401_UNAUTHORIZED)
+        queryset = Post.objects.filter(post_kind1=pk)
         serilaizer = PostSerializer(queryset,many=True)
         return Response(serilaizer.data)
 
@@ -49,17 +58,39 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'Plz enter stars field'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['POST'], detail=True)
+    def buy_post(self, request, pk=None):
+        user = Profile.objects.get(user=request.user)
+        post = Post.objects.get(id=pk)
+        if user.credit < post.cost:
+            return Response({'message': 'Dont have enought credit'},status.HTTP_402_PAYMENT_REQUIRED)
+        buying = Buying.objects.create(post=post,user=user)
+        serializer = BuyingSerializer(buying, many=False)
+        user.credit = user.credit-post.cost
+        user.save()
+        response = {'message': f'{request.user} bought {post.id}', 'result': serializer.data}
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class BuyingViewset(viewsets.ModelViewSet):
+    serializer_class = BuyingSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
+    queryset = Buying.objects.all()
+    
+    @action(methods=['GET'], detail=False)
+    def bought_post(self,request):
+        if str(request.user) == 'AnonymousUser':
+            return Response({'message: You have to login first'},status=status.HTTP_401_UNAUTHORIZED)
+        queryset = Buying.objects.filter(user=request.user)
+        serilaizer = BuyingSerializer(queryset,many=True)
+        return Response(serilaizer.data)
 
 class RatingViewset(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
+    permission_classes = (IsAuthenticatedOrReadOnly,NodeletePermission)
     queryset = Rating.objects.all()
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     if user.is_superuser:
-    #         return Rating.objects.all()
-    #     return Rating.objects.filter(user=user)
 
     def delete(self, request,*args, **kwargs):
         return Response({'message': 'Not acceptable'}, status.HTTP_406_NOT_ACCEPTABLE)

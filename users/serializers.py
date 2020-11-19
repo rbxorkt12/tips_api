@@ -28,6 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "username")
 
 
+#유저 프로파일 체크
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 # 로그인
 class LoginUserSerializer(serializers.Serializer):
     username = serializers.CharField()

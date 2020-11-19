@@ -2,9 +2,12 @@ from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 from knox.models import AuthToken
 from knox.auth import TokenAuthentication
-from .serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, ProfileSerializer, UpdateProfileSerializer
+from .serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, ProfileSerializer,UpdateProfileSerializer
+from users.serializers import UpdateProfileSerializer
 from .models import Profile
 from permission import IsOwnerOrReadOnly
+from rest_framework.permissions import AllowAny,IsAuthenticated,IsAuthenticatedOrReadOnly
+
 
 # Create your views here.
 
@@ -53,8 +56,15 @@ class UserAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+class ProfileAPI(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
 
 class ProfileUpdateAPI(generics.UpdateAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
     serializer_class = UpdateProfileSerializer

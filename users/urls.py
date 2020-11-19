@@ -6,5 +6,4 @@ urlpatterns = [
     path("auth/login/", LoginAPI.as_view()),
     path("auth/user/", UserAPI.as_view()),
     path("auth/profile/update/", ProfileUpdateAPI.as_view()),
-
 ]

@@ -9,8 +9,15 @@ class Post(models.Model):
     title = models.CharField(max_length=80)
     content = models.CharField(max_length=400)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-
-    #how call?
+    cost = models.IntegerField(default=0)
+    KIND_LIST = (
+        ('U','Undergraduate'),
+        ('G','Graduated')
+    )
+    post_kind1 = models.CharField(max_length=1, choices=KIND_LIST)
+    #학과
+    post_kind2 = models.CharField(max_length=20, blank=True)
+ 
     def rating_average(self):
         sum=0
         ratings = Rating.objects.filter(post=self)
@@ -27,7 +34,15 @@ class Post(models.Model):
             comment_list.append(rating.comments)
         return comment_list
 
-        
+class Buying(models.Model):
+    objects = models.Manager()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('user', 'post'),)
+        index_together = (('user', 'post'),) 
+
 class Rating(models.Model):
     objects = models.Manager()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

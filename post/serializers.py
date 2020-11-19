@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post,Rating
+from .models import Post,Rating,Buying
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -10,4 +10,9 @@ class PostSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
+        fields = '__all__'
+
+class BuyingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Buying
         fields = '__all__'
