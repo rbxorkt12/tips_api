@@ -14,7 +14,7 @@ class Post(models.Model):
         ('U','Undergraduate'),
         ('G','Graduated')
     )
-    post_kind1 = models.CharField(max_length=1, choices=KIND_LIST)
+    post_kind1 = models.CharField(max_length=1, choices=KIND_LIST,default='U')
     #학과
     post_kind2 = models.CharField(max_length=20, blank=True)
  

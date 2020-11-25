@@ -1,9 +1,7 @@
 <template>
-<div class="hello">
+<div class="ListTips">
     <button v-on:click="getPosts">Get whole post</button>
-
     <b-card header="Whole post in such Domain" style="max-width: 40rem; margin: auto; margin-top: 10vh;" class="mb-2" border-variant="info" align="left">
-
         <b-form-group id="to-do-input">
             <b-container fluid>
                 <b-row class="my-1">

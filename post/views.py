@@ -27,7 +27,7 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=True)
     def kind(self,request,pk=None):
         if pk is None :
-            return Response({'meesage : Input proper kind option U or G'},status=status.HTTP_400_BAD_REQUEST})
+            return Response({'meesage : Input proper kind option U or G'},status=status.HTTP_400_BAD_REQUEST)
         if str(request.user) == 'AnonymousUser':
             return Response({'message: You have to login first'},status=status.HTTP_401_UNAUTHORIZED)
         queryset = Post.objects.filter(post_kind1=pk)
@@ -58,16 +58,17 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'Plz enter stars field'}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['POST'], detail=True)
+    @action(methods=['GET'], detail=True)
     def buy_post(self, request, pk=None):
-        user = Profile.objects.get(user=request.user)
+        user = request.user
         post = Post.objects.get(id=pk)
-        if user.credit < post.cost:
+        profile = Profile.objects.get(user=user)
+        if profile.credit < post.cost:
             return Response({'message': 'Dont have enought credit'},status.HTTP_402_PAYMENT_REQUIRED)
         buying = Buying.objects.create(post=post,user=user)
         serializer = BuyingSerializer(buying, many=False)
-        user.credit = user.credit-post.cost
-        user.save()
+        profile.credit = profile.credit-post.cost
+        profile.save()
         response = {'message': f'{request.user} bought {post.id}', 'result': serializer.data}
         return Response(response, status=status.HTTP_200_OK)
 
@@ -79,7 +80,7 @@ class BuyingViewset(viewsets.ModelViewSet):
     queryset = Buying.objects.all()
     
     @action(methods=['GET'], detail=False)
-    def bought_post(self,request):
+    def own_bought(self,request):
         if str(request.user) == 'AnonymousUser':
             return Response({'message: You have to login first'},status=status.HTTP_401_UNAUTHORIZED)
         queryset = Buying.objects.filter(user=request.user)

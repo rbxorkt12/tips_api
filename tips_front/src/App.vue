@@ -1,7 +1,9 @@
 <template>
 <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Listpost msg="Welcome to Your Vue.js App" />
+    <div class="logo" style="float:right; padding:20px">
+        <img src="./assets/logo.png" width="150px" alt='logo'>
+    </div>
+    <Listpost/>
 </div>
 </template>
 
