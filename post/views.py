@@ -64,7 +64,6 @@ class PostViewSet(viewsets.ModelViewSet):
         if request.user.id is None :
             return Response({'message' : 'Plz login first'},status.HTTP_401_UNAUTHORIZED)
         user_id = request.user.id
-        print(user_id)
         user = User.objects.get(id=user_id)
         post = Post.objects.get(id=pk)
         profile = Profile.objects.get(user=user_id)

@@ -1,19 +1,16 @@
 <template>
 <div id="app">
-    <div class="logo" style="float:right; padding:20px">
-        <img src="./assets/logo.png" width="150px" alt='logo'>
-    </div>
-    <Listpost/>
+    <Navbar></Navbar>
 </div>
 </template>
 
 <script>
-import Listpost from './components/Listpost'
-
+// import Listpost from './components/Listpost'
+import Navbar from './components/Navbar'
 export default {
     name: 'App',
     components: {
-        Listpost
+        Navbar
     }
 }
 </script>
