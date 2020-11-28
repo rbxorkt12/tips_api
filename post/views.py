@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny,IsAuthenticated,IsAuthenticatedO
 from django.shortcuts import get_list_or_404
 from .permission import IsOwnerOrReadOnly,NodeletePermission
 from knox.auth import TokenAuthentication
+from django.contrib.auth.models import User
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -60,9 +61,13 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(methods=['GET'], detail=True)
     def buy_post(self, request, pk=None):
-        user = request.user
+        if request.user.id is None :
+            return Response({'message' : 'Plz login first'},status.HTTP_401_UNAUTHORIZED)
+        user_id = request.user.id
+        print(user_id)
+        user = User.objects.get(id=user_id)
         post = Post.objects.get(id=pk)
-        profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(user=user_id)
         if profile.credit < post.cost:
             return Response({'message': 'Dont have enought credit'},status.HTTP_402_PAYMENT_REQUIRED)
         buying = Buying.objects.create(post=post,user=user)

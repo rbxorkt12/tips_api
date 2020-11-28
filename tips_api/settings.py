@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'post',
-    'question',
     'rest_framework',
     'knox',
     'corsheaders',
