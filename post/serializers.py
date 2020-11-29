@@ -17,4 +17,4 @@ class PostSerializer(serializers.ModelSerializer):
     buying = BuyingSerializer(many=True, read_only=True)
     class Meta:
         model = Post
-        fields = ('comment_list','title','content','author','rating_average','post_kind1','post_kind2','cost','buying')
+        fields = ('comment_list','title','content','author','rating_average','post_kind1','post_kind2','cost','buying','id')
