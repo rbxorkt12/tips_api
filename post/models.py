@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-
 class Post(models.Model):
     objects = models.Manager()
     title = models.CharField(max_length=80)
@@ -15,7 +14,6 @@ class Post(models.Model):
         ('G','Graduated')
     )
     post_kind1 = models.CharField(max_length=1, choices=KIND_LIST,default='U')
-    #학과
     post_kind2 = models.CharField(max_length=20, blank=True)
  
     def rating_average(self):
@@ -33,11 +31,12 @@ class Post(models.Model):
         for rating in ratings:
             comment_list.append(rating.comments)
         return comment_list
+    
 
 class Buying(models.Model):
     objects = models.Manager()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="buying",on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="buying",on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (('user', 'post'),)
