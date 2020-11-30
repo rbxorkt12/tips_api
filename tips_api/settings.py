@@ -26,6 +26,9 @@ SECRET_KEY = '1uoss%_0b+#i4y_lv=1mw9a5qj+ac@dx9+9kzzb!hykog%%0xs'
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Application definition
 
@@ -40,6 +43,8 @@ INSTALLED_APPS = [
     'post',
     'rest_framework',
     'knox',
+    'coresheaders'
+
 ]
 
 MIDDLEWARE = [
