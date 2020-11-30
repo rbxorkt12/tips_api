@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'post',
     'rest_framework',
     'knox',
-    'coresheaders'
+    'corsheaders'
 
 ]
 
